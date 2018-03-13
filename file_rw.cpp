@@ -2,7 +2,7 @@
 #include <fstream>
 using namespace std;
 
-int main(int argc, char *argv[])       //argc = arg.count(кол-во аргументов) ; argv = arg.vector(указатель на массив строковых параметров) >=1
+int main(int argc, char *argv[])   //argc = arg.count(кол-во аргументов) ; argv = arg.vector(указатель на массив строковых параметров) >=1
 {
 	char text[50];                     //переменная хранящая считанные символы из файла text.txt, буфер ->50
 	/*
