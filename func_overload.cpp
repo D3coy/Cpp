@@ -12,7 +12,7 @@ int main()
   string text = "hello";
   print(text);                      //string print()
 
-  float res = del(22, 0);
+  float res = del(22, 10);
   print(res);                       //float print()
 }
 
