@@ -10,3 +10,5 @@
 • func_overload - overloading 2 functions by passing different arguments
 
 • ref_ptr - refference and pointer
+
+• OOP - classes, constructors, destructors all by object oriented style in C++
