@@ -16,6 +16,8 @@
 
 • array_sum - массив введенных чисел и суммирование их
 
+• array_vl - суммирование значений вложенного массива
+
 ------------------------------------------------------------------------------------------
 -----------------------------------EN-----------------------------------------------------
 
@@ -34,5 +36,7 @@ Here are all the programs that I wrote while I was learning C++
 • OOP - classes, constructors, destructors all by object oriented style in C++
 
 • array_sum - an array of entered numbers and add them
+
+• array_vl - sum of elements from enclosed array
 
 ------------------------------------------------------------------------------------------
