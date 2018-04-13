@@ -21,7 +21,7 @@
 
 Here are all the programs that I wrote while I was learning C++
 
-• file_rw - program that writes text to a file and reads it.
+• file_rw - I/O text from file.
 
 • if_f - branching of conditions 
 
