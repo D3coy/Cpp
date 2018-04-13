@@ -33,6 +33,6 @@ Here are all the programs that I wrote while I was learning C++
 
 • OOP - classes, constructors, destructors all by object oriented style in C++
 
-• array_cpp - an array of entered numbers and add them
+• array_sum - an array of entered numbers and add them
 
 ------------------------------------------------------------------------------------------
