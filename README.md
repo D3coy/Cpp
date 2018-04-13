@@ -14,6 +14,8 @@
 
 • OOP - классы, конструкторы, деструкторы - все по объектно-ориентированному стилю в C++
 
+• array_sum - массив введенных чисел и суммирование их
+
 ------------------------------------------------------------------------------------------
 -----------------------------------EN-----------------------------------------------------
 
@@ -30,5 +32,7 @@ Here are all the programs that I wrote while I was learning C++
 • ref_ptr - refference and pointer
 
 • OOP - classes, constructors, destructors all by object oriented style in C++
+
+• array_cpp - an array of entered numbers and add them
 
 ------------------------------------------------------------------------------------------
