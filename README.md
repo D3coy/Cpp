@@ -1,6 +1,6 @@
 -----------------------------------RU-----------------------------------------------------
 
-Здесь собраны все программы которые я написал пока я учился языку C++
+Здесь собраны все программы, которые я написал пока учился языку C++
 
 • file_rw - программа ввода-вывода текста из файла.
 
@@ -18,10 +18,12 @@
 
 • array_vl - суммирование значений вложенного массива
 
+• bubblesort - пузырьковая сортировка массива по-убыванию
+
 ------------------------------------------------------------------------------------------
 -----------------------------------EN-----------------------------------------------------
 
-Here are all the programs that I wrote while I was learning C++
+Here are all the programs, that I wrote while I was learning C++
 
 • file_rw - I/O text from file.
 
@@ -38,5 +40,7 @@ Here are all the programs that I wrote while I was learning C++
 • array_sum - an array of entered numbers and add them
 
 • array_vl - sum of elements from enclosed array
+
+• bubblesort - bubble sorting of the array in descending order
 
 ------------------------------------------------------------------------------------------
