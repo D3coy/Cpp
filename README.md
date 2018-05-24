@@ -20,6 +20,8 @@
 
 • bubblesort - пузырьковая сортировка массива по-убыванию
 
+• NOD - нахождение наибольшего общего делителя для двух чисел
+
 ------------------------------------------------------------------------------------------
 -----------------------------------EN-----------------------------------------------------
 
@@ -42,5 +44,7 @@ Here are all the programs, that I wrote while I was learning C++
 • array_vl - sum of elements from enclosed array
 
 • bubblesort - bubble sorting of the array in descending order
+
+• NOD - finding out the greatest common divisor for two numbers
 
 ------------------------------------------------------------------------------------------
