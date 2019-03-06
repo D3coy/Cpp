@@ -5,8 +5,9 @@ using namespace std;
 
 int main()
 {
-    void intfrac_f (float, float&, float&, string&);                       //proto
-    float number, intpart, fracpart;
+    void intfrac_f (float, float&, float&, string&);                       //прототип
+    float number;
+    float intpart, fracpart;                                            //переменные для ссылочной пересылки
     string random_string;
 
     do {                                                                   //this
