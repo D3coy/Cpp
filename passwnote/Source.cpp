@@ -4,13 +4,30 @@
 #include <commctrl.h>
 #include <strsafe.h>
 #include <stdio.h>
+#include <malloc.h>
+#include <iostream>
+#include "InitConsole.h"
 
 #define IDENTIF_LIST 1
 #define IDENTIF_STATIC 2
 #define IDENTIF_SAVEDATA 3
 #define IDENTIF_BTNSAVE 4
+#define MAX_ARRSIZE 512
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);       // prototype
+
+typedef struct {
+	int wNum;
+	wchar_t identifName[30];
+} dbgIdentifWindows;
+
+dbgIdentifWindows identifWindows[] = {
+	{1, L"IDENTIF_LIST"},
+	{2, L"IDENTIF_STATIC"},
+	{3, L"IDENTIF_SAVEDATA"},
+	{4, L"IDENTIF_BTNSAVE"},
+};
+
 
 typedef struct {
     wchar_t resource[30];
@@ -21,6 +38,29 @@ typedef struct {
 cData data[] = {
     {L"Mail.ru", L"test@mail.ru", L"test1"},        // now as a RAW data, for testing purposes
 };
+
+void dbgStringStdout(int wParamI) {
+	wchar_t outStr[MAX_ARRSIZE];
+	int n = sizeof(identifWindows);
+	bool flag_service = false;
+
+	// search-up the <identifWindows> structure
+	for (int i = 0; i < n; i++)
+	{
+		if (identifWindows[i].wNum == wParamI) {
+			wsprintf(outStr, L"\n\nIt works! wParam > [%d] | Window > [%s]", wParamI, identifWindows[i].identifName);
+			flag_service = true;
+			break;
+		}
+		else {
+			continue;
+		}
+	}
+	if (!flag_service) {
+		wsprintf(outStr, L"\n\nERROR! Not detected window-element wParam > [%d] | Window > [???]", wParamI);
+	}
+	OutputDebugString(outStr);
+}
 
 wchar_t getExPath(void)
 {
@@ -35,29 +75,36 @@ char* fileRW(char saveData[], char flagRW[]) {
 
 	char fsCMP[] = "save\0";
 	char flCMP[] = "load\0";
-	char storageLoadedData[256];
+	int iter_ld = 0;
+	char buffer_loadData[50];
+	char storageLoadedData[1024];
 	char errRET[] = "NULL";
 	char fullPath[50];
 	
 	strcpy(fullPath, dirPath);                // скопировать строку
 
 	if (strcmp(fsCMP, flagRW) == 0) {
-		strcpy(fullPath, "passw_data.dat");                // скопировать строку
+		strcpy(fullPath, strcat(fullPath, "passw_data.dat")); 
+
 		if ((descripFile = fopen(fullPath, "a+")) != NULL) {
 			fputs(saveData, descripFile);
 		}
 		else {
 			puts("[ERROR] File didn't open correctly, no way to save data..");
 		}
+		fclose(descripFile);
 		return (saveData);
 	}
 	else if (strcmp(flCMP, flagRW) == 0) {
-		strcpy(fullPath, "passw_data.dat");                // скопировать строку
+		strcpy(fullPath, strcat(fullPath, "passw_data.dat"));
 		if ((descripFile = fopen(fullPath, "r")) != NULL) {
 			// пока не дойдем до конца, считываем по 256 байт
-			while ((fgets(storageLoadedData, 256, descripFile)) != NULL)
+			while ((fgets(buffer_loadData, sizeof(buffer_loadData), descripFile)) != NULL)
 			{
-				printf("%s", storageLoadedData);
+				for (int i = 0; i < sizeof(buffer_loadData); i++) {
+					storageLoadedData[iter_ld] = buffer_loadData[i];
+					iter_ld += 1;
+				}
 			}
 		}
 		else {
@@ -78,6 +125,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     wc.lpfnWndProc = WndProc;
     wc.hCursor = LoadCursor(0, IDC_ARROW);
 
+	InitConsole();
     RegisterClassW(&wc);
 
     // main window creation call
@@ -103,6 +151,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,
     static HWND hwndList, hwndStatic, hwndSaveData, hwndButton;
     wchar_t credsSendBuf[128];
 	wchar_t credsGetBuf[128];
+	wchar_t outBuff[512] = {'\0'};
 
     switch (msg) {
 
@@ -113,9 +162,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,
             | WS_VISIBLE | LBS_NOTIFY, 10, 10, 150, 120, hwnd,
             (HMENU)IDENTIF_LIST, NULL, NULL);
 
+		// button for save credentials to file (passw_data.dat) and add data to LISTBOXW
 		hwndButton = CreateWindowW(L"BUTTON", L"SAVE", WS_TABSTOP
 			| WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 260, 130, 80, 30, hwnd,
-			NULL, NULL, NULL);
+			(HMENU)IDENTIF_BTNSAVE, NULL, NULL);
 
 		// window with displayed selected data in window LISTBOXW
         hwndStatic = CreateWindowW(WC_STATICW, NULL, WS_CHILD | WS_VISIBLE,
@@ -144,6 +194,53 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,
             }
         }
 
+		// button <SAVE> click
+		if (wParam == 4) {
+			//dbgStringStdout(wParam);		// dbg wParam=? function callout
+			int lengthTXT = GetWindowTextLength(hwndSaveData) + 1;
+			
+			char *buff;
+			buff = (char*)malloc(lengthTXT * sizeof(int));
+			char fSAVE[] = "save\0";
+
+			char* buff_read;
+			buff_read = (char*)malloc(256 * sizeof(int));
+			char fLOAD[] = "load\0";
+
+			GetWindowText(hwndSaveData, credsGetBuf, lengthTXT);
+			size_t len = wcstombs(buff, credsGetBuf, lengthTXT);
+
+			// ___dbg console callout  TRELLO : [<bug_#2> loadable console with STDOUT / IN interception]___
+			std::cout << buff << std::endl << std::endl;
+			// ----------------------------------------------------------------------------------------------
+			
+			// TRELLO : [<bug_#3> remove carriage shift, it causes [double \n\n between login - passw] in passw file]
+			for (int i = 0; i < lengthTXT; i++) {
+				if (buff[i] == '\r') {
+					for (int j = i; buff[j] != '\0'; j++)
+						buff[j] = buff[j + 1];
+					lengthTXT--;
+				}
+			}
+			// --------------------------------------------------------------------------------------------------------
+
+			// TRELLO : [<bug_#1> Output credentials with \n\n]
+			char wrBuffIndents[] = "\n\n";
+			buff = (char*) realloc(buff, (strlen(wrBuffIndents)+ strlen(buff)) * sizeof(char*));
+			strcpy(buff, strcat(buff, "\n\n"));
+			// --------------------------------
+
+			// ___dbg console callout  TRELLO : [<bug_#2> loadable console with STDOUT / IN interception]___
+			std::cout << buff << std::endl;
+			std::cout << lengthTXT;
+			// ---------------------------------------------------------------------------------------------
+
+			// buff_read= fileRW(buff, fLOAD);	// add to inputted text (old content in the file)
+
+			fileRW(buff, fSAVE);
+			free(buff);
+		}
+		
         break;
 
     // cross click handle
